@@ -92,16 +92,15 @@ export default class RichTextEditor extends Component {
                         }
                     }
                     break;
-                case messages.LOG:
-                    console.log('FROM EDIT:', ...message.data);
-                    this.changeListener.map(da => da());
-                    break;
+                case messages.KEYDOWN: {
+                  this.changeListener.map(da => da());
+                  break;
+                }
                 case messages.SELECTION_CHANGE: {
                     const items = message.data;
                     this.state.selectionChangeListeners.map((listener) => {
                         listener(items);
                     });
-                    this.changeListener.map(da => da());
                     break;
                 }
                 case messages.CONTENT_FOCUSED: {
