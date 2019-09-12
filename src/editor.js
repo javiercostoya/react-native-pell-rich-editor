@@ -44,13 +44,13 @@ const HTML = `
             var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
             return document.execCommand(command, false, value);
         };
-        
+
         var postAction = function(data){
             window.ReactNativeWebView.postMessage(JSON.stringify(data));
         };
 
         var editor = null, o_height = 0;
-        
+
         var Actions = {
             bold: {
                 state: function() {
@@ -191,6 +191,7 @@ const HTML = `
                         return exec(formatBlock, '<' + defaultParagraphSeparator + '>');
                     }, 0);
                 }
+                postAction({type: 'KEYDOWN'});
             };
             appendChild(settings.element, content);
 
@@ -220,12 +221,12 @@ const HTML = `
                 setTimeout(handler, 100);
             });
             addEventListener(content, 'blur', function () {
-                postAction({type: 'SELECTION_CHANGE', data: []});
+                postAction({type: 'CONTENT_BLURRED', data: []});
             });
             addEventListener(content, 'focus', function () {
                 postAction({type: 'CONTENT_FOCUSED'});
             });
-            
+
             var message = function (event){
                 var msgData = JSON.parse(event.data), action = Actions[msgData.type];
                 if (action ){

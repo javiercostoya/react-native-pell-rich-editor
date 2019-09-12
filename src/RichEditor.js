@@ -30,6 +30,7 @@ export default class RichTextEditor extends Component {
             height: 0,
         };
         this.focusListeners = [];
+        this.changeListener = [];
     }
 
     componentWillMount() {
@@ -77,7 +78,6 @@ export default class RichTextEditor extends Component {
     }
 
     onMessage = (event) => {
-
         try {
             const message = JSON.parse(event.nativeEvent.data);
             switch (message.type) {
@@ -94,16 +94,22 @@ export default class RichTextEditor extends Component {
                     break;
                 case messages.LOG:
                     console.log('FROM EDIT:', ...message.data);
+                    this.changeListener.map(da => da());
                     break;
                 case messages.SELECTION_CHANGE: {
                     const items = message.data;
                     this.state.selectionChangeListeners.map((listener) => {
                         listener(items);
                     });
+                    this.changeListener.map(da => da());
                     break;
                 }
                 case messages.CONTENT_FOCUSED: {
                     this.focusListeners.map(da => da());
+                    break;
+                }
+                case messages.CONTENT_BLURRED: {
+                    this.changeListener.map(da => da());
                     break;
                 }
                 case messages.OFFSET_HEIGHT:
@@ -167,7 +173,11 @@ export default class RichTextEditor extends Component {
     }
 
     setContentFocusHandler (listener){
-        this.focusListeners.push(listener);
+        this.focusListeners = [listener];
+    }
+
+    setContentChangeHandler (listener){
+      this.changeListener = [listener];
     }
 
     setContentHTML(html) {
