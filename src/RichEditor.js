@@ -136,7 +136,7 @@ export default class RichTextEditor extends Component {
                     useWebKit={true}
                     scrollEnabled={false}
                     {...this.props}
-                    hideKeyboardAccessoryView={true}
+                    hideKeyboardAccessoryView={false}
                     keyboardDisplayRequiresUserAction={false}
                     ref={(r) => {
                         this.webviewBridge = r
